@@ -4,7 +4,7 @@ const path = require('path');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
-app.use(express.static(path.join(__dirname, '../ai-scheduler/build')));
+app.use(express.static(path.join(__dirname, './front_end')));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../ai-scheduler/build', 'index.html'));
