@@ -4,13 +4,15 @@ const path = require('path');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 const ai = require('./ai.js');
+const db = require('./db.js');
+
 
 app.use(express.static(path.join(__dirname, './front_end')));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../ai-scheduler/build', 'index.html'));
 });
 
-
+console.log(db.getCourses("MTH", 4270));
 
 const taskDictionary = {};
 
