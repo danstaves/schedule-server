@@ -21,8 +21,7 @@ class CourseRecord {
     }
 }
 
-async function parseDegreeEvaluation() {
-    const filePath = "/Users/aryasabeti/Downloads/Degree evaluation record 5 (1).mhtml";
+async function parseDegreeEvaluation(filePath) {
 
     try {
         const fileContent = await fs.readFile(filePath, 'utf-8');
@@ -90,11 +89,14 @@ async function parseDegreeEvaluation() {
             );
         });
 
+        return next_courses
+
     } catch (error) {
         console.log("Error reading the file: " + error.message);
         console.error(error);
     }
 }
 
-// Run the function
-parseDegreeEvaluation();
+module.exports = {
+    parseDegreeEvaluation
+};
