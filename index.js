@@ -3,8 +3,13 @@ const app = express();
 const path = require('path');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const {Mutex} = require('async-mutex');
 const ai = require('./ai.js');
 const db = require('./db.js');
+
+
+const m = new Mutex();
+let taskNum = 1000;
 
 
 app.use(express.static(path.join(__dirname, './front_end')));
@@ -17,11 +22,14 @@ console.log(db.getCourses("MTH", 4270));
 const taskDictionary = {};
 
 class Task{
-    constructor(taskId, asyncFunc){
+    constructor(taskId, asyncFunc, file, numClasses){
+        this.file = file;
+        this.numClasses = numClasses;
         this.taskId = taskId;
         this.func = asyncFunc;
         this.status = "";
         this.message = "";
+        this.schedule=[];
     }
 
     async begin(){
@@ -29,24 +37,26 @@ class Task{
     }
 }
 
-app.post('/api/getSchedule', upload.single("file"), (req, res) => {
+app.post('/api/getSchedule', upload.single("file"), async (req, res) => {
     const file = req.file;
+    const numClasses = req.body.numClasses;
 
-    console.log(`Received file: ${file.originalname}`);
+    console.log(`Received Data: ${file.originalname}, Num Classes: ${numClasses}`);
 
-    let taskId = Math.floor(Math.random()*1000);
+    const release = await m.acquire();
+    let task = new Task(++taskNum, ai.generateSchedule, file, numClasses);
+    release();
 
-    let task = new Task(taskId, ai.generateSchedule);
     task.begin();
 
-    taskDictionary[taskId] = task;
+    taskDictionary[taskNum] = task;
 
-    res.redirect("/api/getSchedule/" + taskId);
+    res.redirect("/api/getSchedule/" + taskNum);
 });
 app.get('/api/getSchedule/:taskid', (req, res) => {
     console.log(`Received request for task: ${req.params.taskid}`);
     let task = taskDictionary[req.params.taskid];
-    res.send({status:task.status, message:task.message});
+    res.send({status:task.status, message:task.message, schedule:task.schedule});
 });
 
 // Start the server
