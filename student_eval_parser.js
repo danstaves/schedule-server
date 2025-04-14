@@ -72,9 +72,9 @@ async function parseDegreeEvaluation(filePath) {
             }
         }
 
-        const next_courses = records.filter(record => record.met === false);
+        //const next_courses = records.filter(record => record.met === false);
 
-        return next_courses
+        return records;
 
     } catch (error) {
         console.log("Error reading the file: " + error.message);
@@ -82,6 +82,22 @@ async function parseDegreeEvaluation(filePath) {
     }
 }
 
+async function mergeRecordsWithRequirements(requirements,records) {
+    const mergedRecords = [];
+
+    for (const req of requirements) {
+        const requirement = requirements.find(req => req.requirement === record.requirement);
+        if (requirement) {
+            mergedRecords.push({
+                ...record,
+                course_requirements: requirement.course_requirements
+            });
+        }
+    }
+
+    return mergedRecords;
+}
 module.exports = {
-    parseDegreeEvaluation
+    parseDegreeEvaluation,
+    mergeRecordsWithRequirements
 };
