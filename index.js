@@ -7,7 +7,6 @@ const {Mutex} = require('async-mutex');
 const ai = require('./ai.js');
 const db = require('./db.js');
 
-
 const m = new Mutex();
 let taskNum = 1000;
 
@@ -16,8 +15,6 @@ app.use(express.static(path.join(__dirname, './front_end')));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../ai-scheduler/build', 'index.html'));
 });
-
-console.log(db.getCourses("MTH", 4270));
 
 const taskDictionary = {};
 
@@ -36,6 +33,15 @@ class Task{
         this.promise = this.func(this);
     }
 }
+
+const testRecordPath = path.join(__dirname, "Degree evaluation record 5.mhtml");
+const testRecord = {
+    path: testRecordPath,
+    originalname: "Degree evaluation record 5.mhtml"
+};
+const testTask = new Task(1, ai.generateSchedule, testRecord, 4);
+testTask.begin();
+
 
 app.post('/api/getSchedule', upload.single("file"), async (req, res) => {
     const file = req.file;

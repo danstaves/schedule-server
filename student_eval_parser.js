@@ -72,22 +72,7 @@ async function parseDegreeEvaluation(filePath) {
             }
         }
 
-        // Print table header
-        console.log(
-            `${"Met".padEnd(8)} ${"Requirement".padEnd(20)} ${"Term".padEnd(10)} ` +
-            `${"Satisfied By".padEnd(15)} ${"Title".padEnd(30)} ${"Attribute".padEnd(15)} ` +
-            `${"Credits".padEnd(8)} ${"Grade".padEnd(8)} ${"Source".padEnd(10)}`
-        );
-        console.log('-'.repeat(120));
         const next_courses = records.filter(record => record.met === false);
-        // Print table rows (met will display as true/false)
-        next_courses.forEach(record => {
-            console.log(
-                `${String(record.met).padEnd(8)} ${record.requirement.padEnd(20)} ${record.term.padEnd(10)} ` +
-                `${record.satisfiedBy.padEnd(15)} ${record.title.padEnd(30)} ${record.attribute.padEnd(15)} ` +
-                `${record.credits.padEnd(8)} ${record.grade.padEnd(8)} ${record.source.padEnd(10)}`
-            );
-        });
 
         return next_courses
 

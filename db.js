@@ -6,12 +6,19 @@ const db = new sqlite.Database('fall2025.db', (err) => {
     else console.log("Connected to Database");
 });
 
-db.each("SELECT * from dt_AllCourses WHERE start_time NOT null", (err, row) => {
-    if (err) console.log(err);
-    else {
-        console.log(row);
-    }
-});
+function getCoursesAsync(subject, number){
+    return new Promise((resolve, reject) => {
+        db.all(`SELECT * from dt_AllCourses where subject='${subject}' and course_number='${number}'`, (err,rows)=>{
+            if (err){
+                console.log(err);
+                reject(err);
+            }else{
+                resolve(rows);
+            }
+        });
+    });
+}
+
 
 function getCourses(subject, number){
     db.serialize(()=>{
@@ -28,5 +35,5 @@ function getCourses(subject, number){
 
 
 module.exports ={
-    getCourses
+    getCourses, getCoursesAsync
 }
