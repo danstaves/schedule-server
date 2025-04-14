@@ -13,27 +13,33 @@ async function generateSchedule(task){
     const record = task.file;
     const numClasses = task.numClasses;
 
-
+    // Parse the uploaded degree record for required courses
     task.status = "parsing";
     const requirements = await parseDegreeEvaluation(record.path);
 
+    // Compare the requirements with the Fall 2025 Course Schedule (DB Lookup)
     const requirementOptions = await Promise.all(requirements.map(async requirement=>{
         const schedules = await Promise.all(requirement.course_requirements.map(async c=>{
             const [subject, number]= c.split(" ");
+
+            // Get the available sections for the course
             const sections = await getCoursesAsync(subject, number);
+
+            // Return the subject, course number, and available sections
             return {
                 subject: subject,
                 number: number,
-                sections: sections.map(x=>x.id)
+                sections: sections
             };
         }));
         return {
             requirement: requirement.requirement,
-            courses: schedules.filter(x=>x.sections.length > 0)
+            courses: schedules.filter(x=>x.sections.length > 0) // Filter out courses with no available sections
         }
     }));
 
-    for (req of requirementOptions.filter(x=>x.courses.length > 0)){
+    // Print out the available courses for each requirement
+    for (req of requirementOptions.filter(x=>x.courses.length > 0)){ //Filter out requirements with no available courses
         console.log(req);
     }
 
