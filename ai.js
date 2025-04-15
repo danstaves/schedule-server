@@ -1,6 +1,6 @@
 const {parseDegreeEvaluation } = require("./student_eval_parser");
 const {getCoursesAsync} = require("./db.js");
-const {mergeRecordsWithRequirements } = require("./student_eval_parser");
+const AISchedule = require("./ASTAR_AI_2.js");
 
 async function sleep(ms){
     return new Promise((resolve, reject) => {
@@ -20,6 +20,7 @@ async function generateSchedule(task){
     const requirements = records.filter(record => record.met === false);
 
     // Compare the requirements with the Fall 2025 Course Schedule (DB Lookup)
+    task.status = "analyzing";
     const requirementOptions = await Promise.all(requirements.map(async requirement=>{
         const schedules = await Promise.all(requirement.course_requirements.map(async c=>{
             const [subject, number]= c.split(" ");
@@ -40,24 +41,11 @@ async function generateSchedule(task){
         }
     }));
 
-    // Print out the available courses for each requirement
-    const availableCourses = [];
-    for (req of requirementOptions.filter(x=>x.courses.length > 0)){ //Filter out requirements with no available courses
-        console.log(req);
-        availableCourses.push(req);
-    }
-    // Send the requirements to the parser to be merged with the records
-    const testing = await mergeRecordsWithRequirements(availableCourses, records);
+    const availableRequirements = requirementOptions.filter(x=>x.courses.length > 0);
 
 
-    
-
-
-
-    task.status = "analyzing";
-    await sleep(5000);
     task.status = "scheduling";
-    await sleep(5000);
+    task.schedule = AISchedule(availableRequirements, numClasses);
     task.status = "success";
 }
 
