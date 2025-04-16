@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.17d0e534.css",
-    "main.js": "/static/js/main.02d1ee45.js",
+    "main.css": "/static/css/main.5cf1baac.css",
+    "main.js": "/static/js/main.b3d02fcd.js",
     "static/js/453.bf154c2a.chunk.js": "/static/js/453.bf154c2a.chunk.js",
     "static/media/udmercy_logo.png": "/static/media/udmercy_logo.5dbe71bf5c9d35249faf.png",
     "index.html": "/index.html",
-    "main.17d0e534.css.map": "/static/css/main.17d0e534.css.map",
-    "main.02d1ee45.js.map": "/static/js/main.02d1ee45.js.map",
+    "main.5cf1baac.css.map": "/static/css/main.5cf1baac.css.map",
+    "main.b3d02fcd.js.map": "/static/js/main.b3d02fcd.js.map",
     "453.bf154c2a.chunk.js.map": "/static/js/453.bf154c2a.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.17d0e534.css",
-    "static/js/main.02d1ee45.js"
+    "static/css/main.5cf1baac.css",
+    "static/js/main.b3d02fcd.js"
   ]
 }
